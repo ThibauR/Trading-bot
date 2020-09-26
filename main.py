@@ -13,10 +13,20 @@ api_key = ''
 api_secret = ''
 client = Client(api_key, api_secret)
 
+def topup_bnb(min_balance: float, topup: float):
+	bnb_balance = client.get_asset_balance(asset='BNB')
+	bnb_balance = float(bnb_balance['free'])
+	if bnb_balance < min_balance:
+		qty = round(topup - bnb_balance, 5)
+		print(qty)
+		order = client.order_market_buy(symbol='BNBUSDT', quantity=qty)
+		return order
+	return False
 
-
-
-
+#topup_bnb, if less than 0.5 BNB is available. Top up till 1.5 BNB
+min_balance = 0.5
+topup = 1.5
+order = topup_bnb(min_balance, topup)
 
 #check max buy amount
 def buyAmount(coin, pair):
